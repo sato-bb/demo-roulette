@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roulette Controller</title>
+    <link rel="stylesheet" href="/controller/style.css" />
+  </head>
+  <body>
+    <main class="controller">
+      <p class="eyebrow">Controller</p>
+      <h1>目押しルーレット</h1>
+
+      <section class="panel" aria-live="polite">
+        <p class="label">現在のターゲット</p>
+        <div class="target symbol-image-wrap" id="target"></div>
+        <p class="message" id="message">STARTを押してゲーム開始</p>
+      </section>
+
+      <section class="actions">
+        <button class="button button-start" id="startButton" type="button">START</button>
+        <div class="stop-buttons" id="stopButtons"></div>
+        <button class="button button-reset" id="resetButton" type="button">RESET</button>
+      </section>
+
+      <section class="progress">
+        <p class="label">4リール</p>
+        <ol class="sequence" id="sequence"></ol>
+      </section>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/controller/controller.js"></script>
+  </body>
+</html>

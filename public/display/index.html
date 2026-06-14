@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roulette Display</title>
+    <link rel="stylesheet" href="/display/style.css" />
+  </head>
+  <body>
+    <main class="display" id="display">
+      <header class="header">
+        <p class="eyebrow">Timing Roulette</p>
+        <h1>目押しチャレンジ</h1>
+      </header>
+
+      <section class="roulette" aria-live="polite">
+        <p class="target-copy">次の目標：<span class="symbol-image-wrap" id="nextTarget"></span></p>
+        <div class="reels" id="reels"></div>
+        <p class="message" id="message">STARTを押してゲーム開始</p>
+      </section>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/display/display.js"></script>
+  </body>
+</html>
