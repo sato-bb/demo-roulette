@@ -27,8 +27,8 @@ npm run dev
 ## URL
 
 ```text
-http://localhost:3000/controller
-http://localhost:3000/display
+http://localhost:3002/controller
+http://localhost:3002/display
 ```
 
 ## 構成
