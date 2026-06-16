@@ -15,12 +15,6 @@
   @include box-reset;
 }
 
-html,
-body {
-  width:100vw;
-  height:100dvh;
-  overflow:hidden;
-}
 body {
   @include body-base;
   background: var(--bg);
