@@ -1,0 +1,34 @@
+// 共通カラー
+$color-white: #ffffff;
+$color-black: #000000;
+
+$color-success: rgba(80, 220, 120, 0.85);
+$color-success-soft: rgba(80, 220, 120, 0.35);
+$color-success-glow: rgba(120, 255, 170, 0.35);
+
+$color-danger: #ff5a5f;
+$color-danger-soft: rgba(255, 90, 95, 0.45);
+$color-danger-glow: rgba(255, 90, 95, 0.35);
+
+$font-family-base: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+$breakpoint-tablet: 720px;
+
+// Display
+$display-bg: #090a0f;
+$display-bg-gradient-center: #24283a;
+$display-panel: rgba(255, 255, 255, 0.08);
+$display-muted: rgba(255, 255, 255, 0.68);
+$display-line: rgba(255, 255, 255, 0.16);
+$display-gold: #d4af37;
+$display-gold-dark: #8a7020;
+$display-slot-frame-top: #3a2f14;
+$display-slot-frame-bottom: #1a1408;
+$display-reels-bg: #0a0b10;
+$display-reel-window-bg: #11131c;
+
+// Controller
+$controller-bg: #111318;
+$controller-muted: #9ca3af;
+$controller-line: rgba(255, 255, 255, 0.14);
+$controller-accent: $color-white;

@@ -16,21 +16,41 @@ function createReels() {
   }));
 }
 
+function createEmptyStops() {
+  return Array(REEL_COUNT).fill(null);
+}
+
 const initialState = () => ({
   status: "idle", // idle | spinning | success | failed
   reels: createReels(),
-  currentStep: 0,
-  stops: [],
-  message: "STARTを押してゲーム開始",
-  tickMs: 120,
+  stops: createEmptyStops(),
+  message: "好きな順番でリールを止めてください",
+  tickMs: 300,
   updatedAt: Date.now(),
 });
 
 let state = initialState();
 let timer = null;
 
+function createSpinningState() {
+  const nextState = initialState();
+  nextState.status = "spinning";
+  nextState.message = "好きな順番でリールを止めてください";
+  return nextState;
+}
+
+function beginSpinning(onTick) {
+  state = createSpinningState();
+  startTicker(onTick);
+  return serializeState();
+}
+
 function getReelSymbol(reel) {
   return SYMBOLS[reel.index];
+}
+
+function countUnlockedReels() {
+  return state.reels.filter((reel) => !reel.locked).length;
 }
 
 function serializeReel(reel, reelIndex) {
@@ -42,8 +62,7 @@ function serializeReel(reel, reelIndex) {
     label: SYMBOL_LABELS[symbol],
     imageUrl: getSymbolImage(symbol),
     locked: reel.locked,
-    isCurrent: reelIndex === state.currentStep && state.status === "spinning",
-    canStop: reelIndex === state.currentStep && state.status === "spinning" && !reel.locked,
+    canStop: state.status === "spinning" && !reel.locked,
     targetLabel: SYMBOL_LABELS[TARGET_SEQUENCE[reelIndex]],
     targetImageUrl: getSymbolImage(TARGET_SEQUENCE[reelIndex]),
     stop: stop
@@ -58,6 +77,8 @@ function serializeReel(reel, reelIndex) {
 }
 
 function serializeState() {
+  const nextUnstoppedIndex = state.reels.findIndex((reel) => !reel.locked);
+
   return {
     ...state,
     reels: state.reels.map(serializeReel),
@@ -66,8 +87,10 @@ function serializeState() {
       label: SYMBOL_LABELS[symbol],
       imageUrl: getSymbolImage(symbol),
     })),
-    nextTargetLabel: getTargetLabel(state.currentStep),
-    nextTargetImageUrl: getSymbolImage(TARGET_SEQUENCE[state.currentStep]),
+    nextTargetLabel:
+      nextUnstoppedIndex >= 0 ? getTargetLabel(nextUnstoppedIndex) : "",
+    nextTargetImageUrl:
+      nextUnstoppedIndex >= 0 ? getSymbolImage(TARGET_SEQUENCE[nextUnstoppedIndex]) : "",
   };
 }
 
@@ -108,64 +131,70 @@ function lockAllReels() {
 }
 
 function startGame(onTick) {
-  state = initialState();
-  state.status = "spinning";
-  state.message = `1つ目：${getTargetLabel(0)}で止めてください`;
-  startTicker(onTick);
-  return serializeState();
+  return beginSpinning(onTick);
 }
 
-function stopRoulette(onTick, stepIndex = state.currentStep) {
+function stopRoulette(onTick, reelIndex) {
   if (state.status !== "spinning") {
-    return touch("STARTを押してゲームを開始してください");
+    return touch("リセットして再開してください");
   }
 
-  if (stepIndex !== state.currentStep) {
-    return touch(`${state.currentStep + 1}番目のリールを止めてください`);
+  if (reelIndex === undefined || reelIndex === null) {
+    return serializeState();
   }
 
-  const reel = state.reels[stepIndex];
-  if (reel.locked) {
+  const reel = state.reels[reelIndex];
+  if (!reel || reel.locked) {
     return serializeState();
   }
 
   const stoppedSymbol = getReelSymbol(reel);
-  const expectedLabel = getTargetLabel(stepIndex);
-  const isCorrect = judgeStep(stepIndex, stoppedSymbol);
+  const expectedLabel = getTargetLabel(reelIndex);
+  const isCorrect = judgeStep(reelIndex, stoppedSymbol);
 
   reel.locked = true;
 
-  state.stops.push({
-    step: stepIndex + 1,
+  state.stops[reelIndex] = {
+    reel: reelIndex + 1,
     symbol: stoppedSymbol,
     label: SYMBOL_LABELS[stoppedSymbol],
     expectedLabel,
     correct: isCorrect,
-  });
+  };
 
-  state.currentStep += 1;
+  const remaining = countUnlockedReels();
 
-  if (state.currentStep >= TARGET_SEQUENCE.length) {
-    const allCorrect = state.stops.every((stop) => stop.correct);
+  if (remaining === 0) {
+    const allCorrect = state.stops.every((stop) => stop?.correct);
     state.status = allCorrect ? "success" : "failed";
     state.message = allCorrect
-      ? "成功！順番通りに目押しできました"
+      ? "成功！すべて正しい位置で止められました"
       : "失敗：目押しにミスがありました";
     lockAllReels();
     stopTicker();
     return serializeState();
   }
 
-  const nextLabel = getTargetLabel(state.currentStep);
   state.message = isCorrect
-    ? `成功！次は${nextLabel}で止めてください`
-    : `外れ：${expectedLabel}で止める番でした。次は${nextLabel}で止めてください`;
+    ? `${reelIndex + 1}番目OK！残り${remaining}つ`
+    : `${reelIndex + 1}番目NG：${expectedLabel}で止める番でした（残り${remaining}つ）`;
   return serializeState();
 }
 
-function resetGame() {
+function resetGame(onTick) {
   stopTicker();
-  state = initialState();
+  return beginSpinning(onTick);
+}
+
+function bootGame(onTick) {
+  if (state.status !== "spinning") {
+    return beginSpinning(onTick);
+  }
+
+  if (!timer) {
+    startTicker(onTick);
+  }
+
   return serializeState();
 }
 
@@ -174,4 +203,5 @@ module.exports = {
   startGame,
   stopRoulette,
   resetGame,
+  bootGame,
 };

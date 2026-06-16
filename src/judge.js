@@ -8,10 +8,10 @@ const SYMBOL_LABELS = {
 };
 
 const SYMBOL_IMAGES = {
-  triangle: "/img/triangle.jpg",
-  circle: "/img/circle.jpg",
-  cross: "/img/cross.jpg",
-  square: "/img/square.jpg",
+  triangle: "/img/triangle.svg",
+  circle: "/img/circle.svg",
+  cross: "/img/cross.svg",
+  square: "/img/square.svg",
 };
 
 const TARGET_SEQUENCE = ["triangle", "circle", "cross", "square"];

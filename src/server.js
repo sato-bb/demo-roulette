@@ -43,7 +43,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("game:reset", () => {
-    const state = game.resetGame();
+    const state = game.resetGame(broadcastState);
     broadcastState(state);
   });
 
@@ -53,5 +53,7 @@ io.on("connection", (socket) => {
 });
 
 server.listen(PORT, () => {
+  const state = game.bootGame(broadcastState);
+  broadcastState(state);
   console.log(`Roulette MVP running at http://localhost:${PORT}`);
 });

@@ -24,6 +24,28 @@ npm install
 npm run dev
 ```
 
+`npm run dev` は SCSS の監視コンパイルとサーバー起動を同時に行います。
+
+## スタイル（SCSS）
+
+画面の見た目は `scss/` 以下の SCSS からビルドします。
+
+```text
+scss/
+  _variables.scss   # 色・フォントなどの変数
+  _mixins.scss      # 共通 mixin
+  display.scss      # ディスプレイ画面
+  controller.scss   # コントローラー画面
+```
+
+```bash
+npm run build:css   # 1回だけコンパイル
+npm run watch:css   # 変更を監視してコンパイル
+```
+
+コンパイル結果は `public/display/style.css` と `public/controller/style.css` に出力されます。
+カスタマイズするときは SCSS を編集してください。
+
 ## URL
 
 ```text
@@ -38,6 +60,11 @@ src/
   server.js
   gameState.js
   judge.js
+scss/
+  _variables.scss
+  _mixins.scss
+  display.scss
+  controller.scss
 public/
   controller/
     index.html

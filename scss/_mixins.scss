@@ -1,0 +1,32 @@
+@use "variables" as *;
+
+@mixin box-reset {
+  box-sizing: border-box;
+}
+
+@mixin body-base {
+  margin: 0;
+  min-height: 100vh;
+  font-family: $font-family-base;
+}
+
+@mixin grid-center {
+  display: grid;
+  place-items: center;
+}
+
+@mixin symbol-image-base {
+  display: block;
+  object-fit: contain;
+}
+
+@mixin status-border($color, $glow-color) {
+  border-color: $color;
+  box-shadow: 0 0 24px $glow-color;
+}
+
+@mixin tablet-down {
+  @media (max-width: $breakpoint-tablet) {
+    @content;
+  }
+}

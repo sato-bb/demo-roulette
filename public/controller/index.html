@@ -8,25 +8,12 @@
   </head>
   <body>
     <main class="controller">
-      <p class="eyebrow">Controller</p>
-      <h1>目押しルーレット</h1>
+      <div class="controller-bg" aria-hidden="true"></div>
 
-      <section class="panel" aria-live="polite">
-        <p class="label">現在のターゲット</p>
-        <div class="target symbol-image-wrap" id="target"></div>
-        <p class="message" id="message">STARTを押してゲーム開始</p>
-      </section>
-
-      <section class="actions">
-        <button class="button button-start" id="startButton" type="button">START</button>
+      <section class="actions" aria-live="polite">
         <div class="stop-buttons" id="stopButtons"></div>
-        <button class="button button-reset" id="resetButton" type="button">RESET</button>
       </section>
-
-      <section class="progress">
-        <p class="label">4リール</p>
-        <ol class="sequence" id="sequence"></ol>
-      </section>
+      <button class="button-reset" id="resetButton" type="button">RESET</button>
     </main>
 
     <script src="/socket.io/socket.io.js"></script>

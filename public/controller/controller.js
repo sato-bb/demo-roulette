@@ -1,11 +1,50 @@
 const socket = io();
 
-const target = document.getElementById("target");
-const message = document.getElementById("message");
-const sequence = document.getElementById("sequence");
 const stopButtonsContainer = document.getElementById("stopButtons");
-const startButton = document.getElementById("startButton");
 const resetButton = document.getElementById("resetButton");
+const controllerBg = document.querySelector(".controller-bg");
+
+const FLOATING_SHAPES = [
+  "/img/circle.svg",
+  "/img/cross.svg",
+  "/img/square.svg",
+  "/img/triangle.svg",
+];
+
+function createFloatingBackground(container) {
+  const shapeCount = Math.round(52);
+
+  for (let index = 0; index < shapeCount; index += 1) {
+    const shape = document.createElement("img");
+    shape.src = FLOATING_SHAPES[Math.floor(Math.random() * FLOATING_SHAPES.length)];
+    shape.alt = "";
+    shape.className = "controller-bg__shape";
+    shape.draggable = false;
+
+    const size = 20 + Math.random() * 56;
+    const left = Math.random() * 100;
+    const duration = 5 + Math.random() * 8;
+    const delay = -Math.random() * duration;
+    const opacity = 0.12 + Math.random() * 0.38;
+    const rotate = Math.random() * 360;
+    const floatX = (Math.random() - 0.5) * 40;
+    const spinDuration = 10 + Math.random() * 14;
+    const spinDirection = Math.random() < 0.5 ? -360 : 360;
+
+    shape.style.setProperty("--size", `${size}px`);
+    shape.style.setProperty("--rotate", `${rotate}deg`);
+    shape.style.setProperty("--rotate-end", `${rotate + spinDirection}deg`);
+    shape.style.setProperty("--float-x", `${floatX}px`);
+    shape.style.setProperty("--rise-duration", `${duration}s`);
+    shape.style.setProperty("--rise-delay", `${delay}s`);
+    shape.style.setProperty("--spin-duration", `${spinDuration}s`);
+    shape.style.setProperty("--spin-delay", `${-Math.random() * spinDuration}s`);
+    shape.style.left = `${left}%`;
+    shape.style.opacity = String(opacity);
+
+    container.appendChild(shape);
+  }
+}
 
 const stopButtons = [];
 
@@ -33,14 +72,10 @@ function createStopButtons() {
     button.className = "button button-stop";
     button.dataset.step = String(index);
 
-    const label = document.createElement("span");
-    label.className = "stop-label";
-    label.textContent = "STOP";
-
     const step = document.createElement("span");
     step.className = "stop-step";
 
-    button.append(label, step);
+    button.append(step);
     button.addEventListener("click", () => {
       socket.emit("game:stop", { stepIndex: index });
     });
@@ -50,44 +85,10 @@ function createStopButtons() {
   }
 }
 
-function renderSequence(state) {
-  sequence.innerHTML = "";
-
-  state.reels.forEach((reel, index) => {
-    const li = document.createElement("li");
-
-    li.className = "sequence-item";
-    if (reel.stop?.correct) li.classList.add("is-correct");
-    if (reel.isCurrent) li.classList.add("is-current");
-    if (reel.stop && !reel.stop.correct) li.classList.add("is-wrong");
-    if (reel.locked) li.classList.add("is-locked");
-
-    const step = document.createElement("span");
-    step.className = "step";
-    step.textContent = `${index + 1}`;
-
-    const expected = document.createElement("span");
-    expected.className = "expected";
-    renderSymbolImage(expected, reel.targetImageUrl, "symbol-image symbol-image--medium");
-
-    const actual = document.createElement("span");
-    actual.className = "actual";
-    if (reel.locked) {
-      renderSymbolImage(actual, reel.imageUrl, "symbol-image symbol-image--medium");
-    } else {
-      actual.textContent = "…";
-    }
-
-    li.append(step, expected, actual);
-    sequence.appendChild(li);
-  });
-}
-
 function renderStopButtons(state) {
   stopButtons.forEach((button, index) => {
     const reel = state.reels[index];
     button.disabled = !reel?.canStop;
-    button.classList.toggle("is-current", Boolean(reel?.isCurrent));
     button.classList.toggle("is-locked", Boolean(reel?.locked));
     button.classList.toggle("is-correct", Boolean(reel?.stop?.correct));
     button.classList.toggle("is-wrong", Boolean(reel?.stop && !reel.stop.correct));
@@ -100,21 +101,16 @@ function renderStopButtons(state) {
 }
 
 function render(state) {
-  renderSymbolImage(target, state.nextTargetImageUrl, "symbol-image symbol-image--hero");
-  message.textContent = state.message;
-
-  startButton.disabled = state.status === "spinning";
   resetButton.disabled = state.status === "spinning";
 
   renderStopButtons(state);
-  renderSequence(state);
+}
+
+if (controllerBg) {
+  createFloatingBackground(controllerBg);
 }
 
 createStopButtons();
-
-startButton.addEventListener("click", () => {
-  socket.emit("game:start");
-});
 
 resetButton.addEventListener("click", () => {
   socket.emit("game:reset");

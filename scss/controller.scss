@@ -1,0 +1,175 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+:root {
+  --bg: #{$controller-bg};
+  --text: #{$color-white};
+  --muted: #{$controller-muted};
+  --line: #{$controller-line};
+  --accent: #{$controller-accent};
+  --danger: #{$color-danger};
+}
+
+* {
+  @include box-reset;
+}
+
+html,
+body {
+  width:100vw;
+  height:100dvh;
+  overflow:hidden;
+}
+body {
+  @include body-base;
+  background: var(--bg);
+  color: var(--text);
+  background: linear-gradient(150deg,  #0072ce 0%,#1f1f1f 100%);
+}
+
+.controller {
+  margin: auto;
+  width: 100vw;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+  &::before {
+    content:'';
+    margin:auto;
+    width:94%;
+    height:64vh;
+    display:block;
+    position:absolute;
+    z-index:1;
+    inset:0;
+    background-color:rgba(#fff,.3);
+    border:2px solid #fff;
+    transform:skewY(-4deg);
+    backdrop-filter:blur(10px);
+    border-radius:10px;
+  }
+}
+
+.controller-bg {
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:0;
+
+  &__shape {
+    position:absolute;
+    top:100%;
+    width:var(--size);
+    height:var(--size);
+    translate:-50% 0;
+    rotate:var(--rotate);
+    animation:
+      controller-rise var(--rise-duration) var(--rise-delay) infinite linear,
+      controller-spin var(--spin-duration) var(--spin-delay) infinite linear;
+    will-change:translate, rotate;
+    filter:grayscale(100%);
+  }
+}
+
+@keyframes controller-rise {
+  0% {
+    translate:calc(-50% + var(--float-x) * -0.6) 0;
+  }
+
+  25% {
+    translate:calc(-50% + var(--float-x)) -25vh;
+  }
+
+  50% {
+    translate:calc(-50% - var(--float-x) * 0.7) -50vh;
+  }
+
+  75% {
+    translate:calc(-50% + var(--float-x) * 0.5) -75vh;
+  }
+
+  100% {
+    translate:calc(-50% - var(--float-x) * 0.6) calc(-100vh - var(--size));
+  }
+}
+
+@keyframes controller-spin {
+  from {
+    rotate:var(--rotate);
+  }
+
+  to {
+    rotate:var(--rotate-end);
+  }
+}
+
+.actions {
+  margin:auto;
+  display:flex;
+  gap: 0;
+  position:relative;
+  z-index:1;
+}
+.stop-buttons {
+  width:100%;
+  display: flex;
+  gap:2vw;
+}
+
+.button {
+  width: 19vw;
+  height:21vw;
+  border: 1px solid #fff;
+  border-radius: 4vw;
+  cursor: pointer;
+  background-color:#ddd;
+  box-shadow:0 5vw 7vw rgba(#fff, 0.45) inset;
+  filter:drop-shadow(0 .2vw .5vw rgba(#000, 0.45));
+  &.is-current {
+    outline: 4px solid var(--accent);
+    transform: translateY(-2px);
+  }
+
+  &.is-locked.is-correct {
+    background: $color-success-soft;
+    color: $color-white;
+  }
+
+  &.is-locked.is-wrong {
+    background: $color-danger-soft;
+    color: $color-white;
+    img {
+      filter:grayscale(100%);
+    }
+  }
+  &:disabled {
+    // opacity: 0.35;
+    cursor: not-allowed;
+  }
+}
+.stop-step {
+  width:60%;
+  img {
+    width:60%;
+  }
+}
+
+.button-reset {
+  width:max-content;
+  height:max-content;
+  padding:1vw 4vw;
+  position:absolute;
+  right:5vw;
+  bottom:5vw;
+  z-index:1;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+
+
+
