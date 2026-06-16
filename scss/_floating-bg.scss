@@ -1,0 +1,54 @@
+.controller-bg,
+.display-bg {
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:0;
+
+  &__shape {
+    position:absolute;
+    top:100%;
+    width:var(--size);
+    height:var(--size);
+    translate:-50% 0;
+    rotate:var(--rotate);
+    animation:
+      floating-rise var(--rise-duration) var(--rise-delay) infinite linear,
+      floating-spin var(--spin-duration) var(--spin-delay) infinite linear;
+    will-change:translate, rotate;
+    filter:grayscale(100%);
+  }
+}
+
+@keyframes floating-rise {
+  0% {
+    translate:calc(-50% + var(--float-x) * -0.6) 0;
+  }
+
+  25% {
+    translate:calc(-50% + var(--float-x)) -25vh;
+  }
+
+  50% {
+    translate:calc(-50% - var(--float-x) * 0.7) -50vh;
+  }
+
+  75% {
+    translate:calc(-50% + var(--float-x) * 0.5) -75vh;
+  }
+
+  100% {
+    translate:calc(-50% - var(--float-x) * 0.6) calc(-100vh - var(--size));
+  }
+}
+
+@keyframes floating-spin {
+  from {
+    rotate:var(--rotate);
+  }
+
+  to {
+    rotate:var(--rotate-end);
+  }
+}

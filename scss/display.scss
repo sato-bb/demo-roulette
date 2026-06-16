@@ -1,5 +1,6 @@
 @use "variables" as *;
 @use "mixins" as *;
+@use "floating-bg";
 
 :root {
   --bg: #{$display-bg};
@@ -25,11 +26,15 @@ body {
 
 .display {
   @include grid-center;
-  min-height: 100vh;
-  padding: clamp(16px, 3vw, 40px);
+  position:relative;
+  min-height:100vh;
+  padding:clamp(16px, 3vw, 40px);
+  overflow:hidden;
 }
 
 .slot-machine {
+  position:relative;
+  z-index:1;
   display: grid;
   gap: clamp(20px, 3vw, 36px);
   width: min(96vw, 1200px);

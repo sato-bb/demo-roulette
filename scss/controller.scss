@@ -1,5 +1,6 @@
 @use "variables" as *;
 @use "mixins" as *;
+@use "floating-bg";
 
 :root {
   --bg: #{$controller-bg};
@@ -24,7 +25,7 @@ body {
   @include body-base;
   background: var(--bg);
   color: var(--text);
-  background: linear-gradient(150deg,  #0072ce 0%,#1f1f1f 100%);
+  background: radial-gradient(circle at center, $display-bg-gradient-center 0%, var(--bg) 62%);
 }
 
 .controller {
@@ -50,60 +51,6 @@ body {
     transform:skewY(-4deg);
     backdrop-filter:blur(10px);
     border-radius:10px;
-  }
-}
-
-.controller-bg {
-  position:absolute;
-  inset:0;
-  overflow:hidden;
-  pointer-events:none;
-  z-index:0;
-
-  &__shape {
-    position:absolute;
-    top:100%;
-    width:var(--size);
-    height:var(--size);
-    translate:-50% 0;
-    rotate:var(--rotate);
-    animation:
-      controller-rise var(--rise-duration) var(--rise-delay) infinite linear,
-      controller-spin var(--spin-duration) var(--spin-delay) infinite linear;
-    will-change:translate, rotate;
-    filter:grayscale(100%);
-  }
-}
-
-@keyframes controller-rise {
-  0% {
-    translate:calc(-50% + var(--float-x) * -0.6) 0;
-  }
-
-  25% {
-    translate:calc(-50% + var(--float-x)) -25vh;
-  }
-
-  50% {
-    translate:calc(-50% - var(--float-x) * 0.7) -50vh;
-  }
-
-  75% {
-    translate:calc(-50% + var(--float-x) * 0.5) -75vh;
-  }
-
-  100% {
-    translate:calc(-50% - var(--float-x) * 0.6) calc(-100vh - var(--size));
-  }
-}
-
-@keyframes controller-spin {
-  from {
-    rotate:var(--rotate);
-  }
-
-  to {
-    rotate:var(--rotate-end);
   }
 }
 
