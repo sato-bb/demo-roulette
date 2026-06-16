@@ -9,6 +9,7 @@
   --line: #{$controller-line};
   --accent: #{$controller-accent};
   --danger: #{$color-danger};
+  --gold: #{$display-gold};
 }
 
 * {
@@ -35,16 +36,17 @@ body {
     content:'';
     margin:auto;
     width:94%;
-    height:64vh;
+    height:50vh;
     display:block;
     position:absolute;
     z-index:1;
     inset:0;
-    background-color:rgba(#fff,.3);
-    border:2px solid #fff;
-    transform:skewY(-4deg);
-    backdrop-filter:blur(10px);
-    border-radius:10px;
+    border-radius: 32px;
+    background: linear-gradient(180deg, $display-slot-frame-top 0%, $display-slot-frame-bottom 100%);
+    border: 4px solid var(--gold);
+    box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.2),
+    0 30px 80px rgba(0, 0, 0, 0.55);
   }
 }
 
@@ -104,8 +106,8 @@ body {
   height:max-content;
   padding:1vw 4vw;
   position:absolute;
-  right:5vw;
-  bottom:5vw;
+  left:5vw;
+  top:5vw;
   z-index:1;
   background: transparent;
   color: var(--text);
