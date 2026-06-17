@@ -1,4 +1,6 @@
 const socket = io();
+const bgmPlayer = window.createBgmPlayer?.() ?? null;
+let bgmStarted = false;
 
 const DISPLAY_TITLE = "SHAPES JACKPOT";
 const DISPLAY_DESCRIPTION = "目押しで△○×□を狙え！";
@@ -262,3 +264,22 @@ if (displayTitle) {
 if (displayDescription) {
   displayDescription.textContent = DISPLAY_DESCRIPTION;
 }
+
+function startBgmOnce() {
+  if (!bgmPlayer || bgmStarted) {
+    return;
+  }
+
+  bgmStarted = true;
+  bgmPlayer.start().catch(() => {
+    bgmStarted = false;
+  });
+}
+
+document.addEventListener(
+  "pointerdown",
+  () => {
+    startBgmOnce();
+  },
+  { once: true },
+);
