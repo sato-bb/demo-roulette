@@ -16,7 +16,7 @@
   rotate: var(--rotate);
   animation: floating-rise var(--rise-duration) var(--rise-delay) infinite linear, floating-spin var(--spin-duration) var(--spin-delay) infinite linear;
   will-change: translate, rotate;
-  filter: grayscale(100%);
+  filter: grayscale(20%) opacity(0.55);
 }
 
 @keyframes floating-rise {
@@ -45,13 +45,14 @@
   }
 }
 :root {
-  --bg: #111318;
-  --text: #ffffff;
-  --muted: #9ca3af;
-  --line: rgba(255, 255, 255, 0.14);
-  --accent: #ffffff;
-  --danger: #ff5a5f;
-  --gold: #d4af37;
+  --bg: #f5f7fb;
+  --text: #1a1d26;
+  --muted: #64748b;
+  --line: rgba(0, 0, 0, 0.12);
+  --accent: #f82525;
+  --danger: #dc2626;
+  --gold: #c9a227;
+  --controller-button-size: clamp(120px, 22vw, 240px);
 }
 
 * {
@@ -62,95 +63,163 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: var(--bg);
+  overflow: hidden;
+  background: radial-gradient(circle at center, #e8edf5 0%, var(--bg) 62%);
   color: var(--text);
-  background: radial-gradient(circle at center, #24283a 0%, var(--bg) 62%);
 }
 
 .controller {
-  margin: auto;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: relative;
+  width: 100vw;
+  height: 100dvh;
+  min-height: 100vh;
   overflow: hidden;
 }
-.controller::before {
-  content: "";
-  margin: auto;
-  width: 94%;
-  height: 50vh;
-  display: block;
-  position: absolute;
-  z-index: 1;
-  inset: 0;
-  border-radius: 32px;
-  background: linear-gradient(180deg, #3a2f14 0%, #1a1408 100%);
-  border: 4px solid var(--gold);
-  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.2), 0 30px 80px rgba(0, 0, 0, 0.55);
-}
 
-.actions {
-  margin: auto;
-  display: flex;
-  gap: 0;
+.controller-panel {
   position: relative;
   z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  padding: clamp(12px, 2.5vh, 24px) clamp(16px, 3vw, 32px);
+}
+
+.controller-frame {
+  width: min(100%, 1200px);
+  padding: clamp(16px, 2.5vh, 28px) clamp(20px, 3vw, 40px);
+  background: rgba(246, 255, 0, 0.1);
+  border: 2px solid #f82525;
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.9), 0 24px 60px rgba(15, 23, 42, 0.1);
+}
+
+.controller-actions {
+  padding: clamp(12px, 2vh, 20px);
+  border-radius: 20px;
+  background: #eef1f6;
+  border: 2px solid rgba(0, 0, 0, 0.06);
 }
 
 .stop-buttons {
-  width: 100%;
-  display: flex;
-  gap: 2vw;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 24px);
+  justify-items: center;
 }
 
 .button {
-  width: 19vw;
-  height: 21vw;
-  border: 1px solid #fff;
-  border-radius: 4vw;
+  display: grid;
+  place-items: center;
+  width: min(100%, var(--controller-button-size));
+  height: min(100%, var(--controller-button-size));
+  aspect-ratio: 1;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  border-radius: clamp(16px, 2.4vw, 24px);
   cursor: pointer;
-  background-color: #ddd;
-  box-shadow: 0 5vw 7vw rgba(255, 255, 255, 0.45) inset;
-  filter: drop-shadow(0 0.2vw 0.5vw rgba(0, 0, 0, 0.45));
+  background: rgba(255, 255, 255, 0.92);
+  touch-action: manipulation;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 .button.is-current {
-  outline: 4px solid var(--accent);
+  border-color: #f82525;
+  box-shadow: 0 0 0 3px rgba(248, 37, 37, 0.15);
   transform: translateY(-2px);
 }
 .button.is-locked.is-correct {
-  background: rgba(80, 220, 120, 0.35);
-  color: #ffffff;
+  animation: correct-glow-pulse 0.5s ease-in-out 1;
 }
 .button.is-locked.is-wrong {
-  background: rgba(255, 90, 95, 0.45);
-  color: #ffffff;
+  border-color: #dc2626;
+  box-shadow: 0 0 24px rgba(220, 38, 38, 0.22);
 }
 .button.is-locked.is-wrong img {
   filter: grayscale(100%);
 }
-.button:disabled {
+.button:disabled:not(.is-locked) {
   cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.button[data-symbol=triangle] {
+  --symbol-glow-color: #0fa790;
+}
+
+.button[data-symbol=circle] {
+  --symbol-glow-color: #ef5976;
+}
+
+.button[data-symbol=cross] {
+  --symbol-glow-color: #5282c2;
+}
+
+.button[data-symbol=square] {
+  --symbol-glow-color: #c37eb5;
 }
 
 .stop-step {
-  width: 60%;
+  display: grid;
+  place-items: center;
+  width: 62%;
+  height: 62%;
 }
 .stop-step img {
-  width: 60%;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.symbol-image--button {
+  filter: drop-shadow(0 4px 8px rgba(15, 23, 42, 0.14));
 }
 
 .button-reset {
-  width: max-content;
-  height: max-content;
-  padding: 1vw 4vw;
   position: absolute;
-  left: 5vw;
-  top: 5vw;
-  z-index: 1;
-  background: transparent;
-  color: var(--text);
-  border: 1px solid var(--line);
+  top: clamp(12px, 2.5vh, 24px);
+  left: clamp(16px, 3vw, 32px);
+  z-index: 2;
+  min-height: 48px;
+  padding: clamp(12px, 1.8vh, 16px) clamp(20px, 4vw, 36px);
+  font-size: clamp(15px, 2vh, 20px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.button-reset:not(:disabled) {
+  color: #f82525;
+  border-color: rgba(248, 37, 37, 0.25);
+}
+.button-reset:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+@media (orientation: landscape) {
+  :root {
+    --controller-button-size: clamp(140px, 24vh, 280px);
+  }
+  .controller-frame {
+    width: min(100%, 1100px);
+  }
+  .stop-buttons {
+    gap: clamp(16px, 2.5vw, 28px);
+  }
+}
+@keyframes correct-glow-pulse {
+  0%, 100% {
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: none;
+  }
+  50% {
+    border-color: var(--symbol-glow-color, #16a34a);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--symbol-glow-color, #16a34a) 55%, transparent), 0 0 36px color-mix(in srgb, var(--symbol-glow-color, #16a34a) 32%, transparent), 0 0 56px color-mix(in srgb, var(--symbol-glow-color, #16a34a) 14%, transparent);
+  }
 }

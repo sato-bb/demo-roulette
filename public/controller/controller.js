@@ -1,5 +1,7 @@
 const socket = io();
 
+const RESET_LABEL = "RESET";
+
 const stopButtonsContainer = document.getElementById("stopButtons");
 const resetButton = document.getElementById("resetButton");
 const controllerBg = document.querySelector(".controller-bg");
@@ -25,7 +27,7 @@ function createFloatingBackground(container) {
     const left = Math.random() * 100;
     const duration = 5 + Math.random() * 8;
     const delay = -Math.random() * duration;
-    const opacity = 0.12 + Math.random() * 0.38;
+    const opacity = 0.18 + Math.random() * 0.32;
     const rotate = Math.random() * 360;
     const floatX = (Math.random() - 0.5) * 40;
     const spinDuration = 10 + Math.random() * 14;
@@ -85,6 +87,12 @@ function createStopButtons() {
   }
 }
 
+function applyButtonSymbol(button, symbolKey) {
+  if (symbolKey) {
+    button.dataset.symbol = symbolKey;
+  }
+}
+
 function renderStopButtons(state) {
   stopButtons.forEach((button, index) => {
     const reel = state.reels[index];
@@ -92,6 +100,8 @@ function renderStopButtons(state) {
     button.classList.toggle("is-locked", Boolean(reel?.locked));
     button.classList.toggle("is-correct", Boolean(reel?.stop?.correct));
     button.classList.toggle("is-wrong", Boolean(reel?.stop && !reel.stop.correct));
+
+    applyButtonSymbol(button, state.targetSequence?.[index]?.key);
 
     const targetEl = button.querySelector(".stop-step");
     if (targetEl) {
@@ -108,6 +118,10 @@ function render(state) {
 
 if (controllerBg) {
   createFloatingBackground(controllerBg);
+}
+
+if (resetButton) {
+  resetButton.textContent = RESET_LABEL;
 }
 
 createStopButtons();

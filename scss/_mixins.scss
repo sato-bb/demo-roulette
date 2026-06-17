@@ -25,6 +25,26 @@
   box-shadow: 0 0 24px $glow-color;
 }
 
+@mixin correct-glow-pulse {
+  animation: correct-glow-pulse .5s ease-in-out 1;
+}
+
+@mixin correct-symbol-shine {
+  animation: correct-symbol-shine 5s ease-in-out 1;
+}
+
+@mixin monitor-up {
+  @media (min-width: $breakpoint-monitor) {
+    @content;
+  }
+}
+
+@mixin landscape-tablet {
+  @media (orientation: landscape) {
+    @content;
+  }
+}
+
 @mixin tablet-down {
   @media (max-width: $breakpoint-tablet) {
     @content;

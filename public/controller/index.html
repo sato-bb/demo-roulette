@@ -7,12 +7,17 @@
     <link rel="stylesheet" href="/controller/style.css" />
   </head>
   <body>
-    <main class="controller">
-      <button class="button-reset" id="resetButton" type="button">RESET</button>
+    <main class="controller" id="controller">
       <div class="controller-bg" aria-hidden="true"></div>
 
-      <section class="actions" aria-live="polite">
-        <div class="stop-buttons" id="stopButtons"></div>
+      <section class="controller-panel" aria-live="polite">
+        <button class="button-reset" id="resetButton" type="button"></button>
+
+        <div class="controller-frame">
+          <div class="controller-actions">
+            <div class="stop-buttons" id="stopButtons"></div>
+          </div>
+        </div>
       </section>
     </main>
 

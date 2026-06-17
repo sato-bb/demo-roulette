@@ -4,12 +4,13 @@
 
 :root {
   --bg: #{$controller-bg};
-  --text: #{$color-white};
+  --text: #{$color-text-primary};
   --muted: #{$controller-muted};
   --line: #{$controller-line};
-  --accent: #{$controller-accent};
+  --accent: #{$display-accent-red};
   --danger: #{$color-danger};
   --gold: #{$display-gold};
+  --controller-button-size: clamp(120px, 22vw, 240px);
 }
 
 * {
@@ -18,101 +19,174 @@
 
 body {
   @include body-base;
-  background: var(--bg);
-  color: var(--text);
+  overflow: hidden;
   background: radial-gradient(circle at center, $display-bg-gradient-center 0%, var(--bg) 62%);
+  color: var(--text);
 }
 
 .controller {
-  margin: auto;
+  position: relative;
   width: 100vw;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  position:relative;
-  overflow:hidden;
-  &::before {
-    content:'';
-    margin:auto;
-    width:94%;
-    height:50vh;
-    display:block;
-    position:absolute;
-    z-index:1;
-    inset:0;
-    border-radius: 32px;
-    background: linear-gradient(180deg, $display-slot-frame-top 0%, $display-slot-frame-bottom 100%);
-    border: 4px solid var(--gold);
-    box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.2),
-    0 30px 80px rgba(0, 0, 0, 0.55);
-  }
+  height: 100dvh;
+  min-height: 100vh;
+  overflow: hidden;
 }
 
-.actions {
-  margin:auto;
-  display:flex;
-  gap: 0;
-  position:relative;
-  z-index:1;
+.controller-panel {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  padding: clamp(12px, 2.5vh, 24px) clamp(16px, 3vw, 32px);
 }
+
+.controller-frame {
+  width: min(100%, 1200px);
+  padding: clamp(16px, 2.5vh, 28px) clamp(20px, 3vw, 40px);
+  background: rgba($display-accent-yellow, 0.1);
+  border: 2px solid $display-accent-red;
+  backdrop-filter: blur(10px);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.9),
+    0 24px 60px $display-shadow-soft;
+}
+
+.controller-actions {
+  padding: clamp(12px, 2vh, 20px);
+  border-radius: 20px;
+  background: $display-reels-bg;
+  border: 2px solid rgba(0, 0, 0, 0.06);
+}
+
 .stop-buttons {
-  width:100%;
-  display: flex;
-  gap:2vw;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 24px);
+  justify-items: center;
 }
 
 .button {
-  width: 19vw;
-  height:21vw;
-  border: 1px solid #fff;
-  border-radius: 4vw;
+  @include grid-center;
+  width: min(100%, var(--controller-button-size));
+  height: min(100%, var(--controller-button-size));
+  aspect-ratio: 1;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  border-radius: clamp(16px, 2.4vw, 24px);
   cursor: pointer;
-  background-color:#ddd;
-  box-shadow:0 5vw 7vw rgba(#fff, 0.45) inset;
-  filter:drop-shadow(0 .2vw .5vw rgba(#000, 0.45));
+  background: rgba(255, 255, 255, 0.92);
+  touch-action: manipulation;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+
   &.is-current {
-    outline: 4px solid var(--accent);
+    border-color: $display-accent-red;
+    box-shadow: 0 0 0 3px rgba($display-accent-red, 0.15);
     transform: translateY(-2px);
   }
 
   &.is-locked.is-correct {
-    background: $color-success-soft;
-    color: $color-white;
+    @include correct-glow-pulse;
   }
 
   &.is-locked.is-wrong {
-    background: $color-danger-soft;
-    color: $color-white;
-    img {
-      filter:grayscale(100%);
-    }
+    @include status-border($color-danger, $color-danger-glow);
   }
-  &:disabled {
-    // opacity: 0.35;
+
+  &.is-locked.is-wrong img {
+    filter: grayscale(100%);
+  }
+
+  &:disabled:not(.is-locked) {
     cursor: not-allowed;
+    opacity: 0.55;
   }
 }
-.stop-step {
-  width:60%;
-  img {
-    width:60%;
+
+@each $symbol, $color in $symbol-colors {
+  .button[data-symbol="#{$symbol}"] {
+    --symbol-glow-color: #{$color};
   }
+}
+
+.stop-step {
+  @include grid-center;
+  width: 62%;
+  height: 62%;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.symbol-image--button {
+  filter: drop-shadow(0 4px 8px $display-shadow-medium);
 }
 
 .button-reset {
-  width:max-content;
-  height:max-content;
-  padding:1vw 4vw;
-  position:absolute;
-  left:5vw;
-  top:5vw;
-  z-index:1;
-  background: transparent;
-  color: var(--text);
-  border: 1px solid var(--line);
+  position: absolute;
+  top: clamp(12px, 2.5vh, 24px);
+  left: clamp(16px, 3vw, 32px);
+  z-index: 2;
+  min-height: 48px;
+  padding: clamp(12px, 1.8vh, 16px) clamp(20px, 4vw, 36px);
+  font-size: clamp(15px, 2vh, 20px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+  box-shadow: 0 8px 24px $display-shadow-soft;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:not(:disabled) {
+    color: $display-accent-red;
+    border-color: rgba($display-accent-red, 0.25);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
 }
 
+@include landscape-tablet {
+  :root {
+    --controller-button-size: clamp(140px, 24vh, 280px);
+  }
 
+  .controller-frame {
+    width: min(100%, 1100px);
+  }
 
+  .stop-buttons {
+    gap: clamp(16px, 2.5vw, 28px);
+  }
+}
+
+@keyframes correct-glow-pulse {
+  0%,
+  100% {
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: none;
+  }
+
+  50% {
+    border-color: var(--symbol-glow-color, #{$color-success});
+    box-shadow:
+      0 0 18px color-mix(in srgb, var(--symbol-glow-color, #{$color-success}) 55%, transparent),
+      0 0 36px color-mix(in srgb, var(--symbol-glow-color, #{$color-success}) 32%, transparent),
+      0 0 56px color-mix(in srgb, var(--symbol-glow-color, #{$color-success}) 14%, transparent);
+  }
+}

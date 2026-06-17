@@ -5,12 +5,12 @@
 :root {
   --bg: #{$display-bg};
   --panel: #{$display-panel};
-  --text: #{$color-white};
+  --text: #{$color-text-primary};
   --muted: #{$display-muted};
   --line: #{$display-line};
   --gold: #{$display-gold};
   --gold-dark: #{$display-gold-dark};
-  --reel-cell-height: clamp(120px, 16vw, 200px);
+  --reel-cell-height: clamp(140px, 16vh, 240px);
 }
 
 * {
@@ -26,45 +26,166 @@ body {
 
 .display {
   @include grid-center;
-  position:relative;
-  min-height:100vh;
-  padding:clamp(16px, 3vw, 40px);
-  overflow:hidden;
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: clamp(20px, 3vh, 48px) clamp(24px, 4vw, 64px);
+  overflow: hidden;
 }
 
 .slot-machine {
-  position:relative;
-  z-index:1;
+  position: relative;
+  z-index: 1;
   display: grid;
-  gap: clamp(20px, 3vw, 36px);
-  width: min(96vw, 1200px);
+  gap: clamp(20px, 2.5vh, 40px);
+  width: min(90vw, 1680px);
+  text-align: center;
+}
+
+.display-title-board {
+  position: relative;
+  justify-self: center;
+  width: fit-content;
+  max-width: 100%;
+  padding:
+    clamp(18px, 2.6vw, 26px)
+    clamp(28px, 5vw, 64px)
+    clamp(16px, 2.4vw, 22px);
+  border-radius: clamp(28px, 5vw, 64px);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.86) 100%),
+    rgba($display-accent-yellow, 0.1);
+  // border: 2px solid $display-accent-red;
+  box-shadow: 0 12px 32px $display-shadow-soft;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(
+      90deg,
+      $symbol-triangle 0% 25%,
+      $symbol-circle 25% 50%,
+      $symbol-cross 50% 75%,
+      $symbol-square 75% 100%
+    );
+    pointer-events: none;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      rgba($symbol-triangle, 0.06) 0%,
+      transparent 28%,
+      transparent 72%,
+      rgba($symbol-square, 0.06) 100%
+    );
+    pointer-events: none;
+  }
+}
+
+.display-title {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: clamp(32px, 4.5vh, 72px);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $display-accent-red;
+}
+
+.display-description {
+  margin: 0;
+  justify-self: center;
+  width: fit-content;
+  max-width: min(100%, 800px);
+  padding: clamp(12px, 1.6vh, 18px) clamp(24px, 3vw, 40px);
+  font-size: clamp(18px, 2.2vh, 32px);
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+  box-shadow: 0 8px 24px $display-shadow-soft;
 }
 
 .slot-frame {
-  padding: clamp(20px, 3vw, 36px);
-  border-radius: 32px;
-  background: linear-gradient(180deg, $display-slot-frame-top 0%, $display-slot-frame-bottom 100%);
-  border: 4px solid var(--gold);
+  padding: clamp(24px, 3vh, 48px) clamp(48px, 6vw, 96px);
+  background: rgba($display-accent-yellow, 0.1);
+  border: 2px solid $display-accent-red;
+  backdrop-filter: blur(10px);
   box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.2),
-    0 30px 80px rgba(0, 0, 0, 0.55);
+    inset 0 2px 0 rgba(255, 255, 255, 0.9),
+    0 24px 60px $display-shadow-soft;
+}
+
+.reels-area {
+  display: grid;
+  gap: clamp(10px, 1.5vw, 16px);
+  padding: clamp(12px, 2vw, 20px);
+  border-radius: 20px;
+  background: $display-reels-bg;
+  border: 2px solid rgba(0, 0, 0, 0.06);
+}
+
+.target-hints {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(10px, 1.5vw, 16px);
+}
+
+.target-hint {
+  @include grid-center;
+}
+
+.target-hint__image {
+  @include symbol-image-base;
+  width: clamp(24px, 3vh, 48px);
+  height: clamp(24px, 3vh, 48px);
+}
+
+.target-hint.is-locked:not(.is-correct):not(.is-wrong) {
+  filter: grayscale(100%);
+}
+
+// .target-hint.is-correct {
+//   @include correct-glow-pulse;
+
+//   .target-hint__image {
+//     @include correct-symbol-shine;
+//   }
+// }
+
+@each $symbol, $color in $symbol-colors {
+  .reel[data-symbol="#{$symbol}"],
+  .target-hint[data-symbol="#{$symbol}"] {
+    --symbol-glow-color: #{$color};
+  }
 }
 
 .reels {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: clamp(10px, 1.5vw, 16px);
-  padding: clamp(12px, 2vw, 20px);
-  border-radius: 20px;
-  background: $display-reels-bg;
-  border: 2px solid rgba(255, 255, 255, 0.08);
 }
 
 .reel {
   position: relative;
   border-radius: 16px;
-  background: rgba(0, 0, 0, 0.45);
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid rgba(0, 0, 0, 0.08);
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
@@ -76,9 +197,9 @@ body {
   overflow: hidden;
   border-radius: 14px;
   background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.15) 42%, rgba(0, 0, 0, 0.15) 58%, rgba(0, 0, 0, 0.75) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.2) 42%, rgba(255, 255, 255, 0.2) 58%, rgba(255, 255, 255, 0.92) 100%),
     $display-reel-window-bg;
-  box-shadow: inset 0 10px 30px rgba(0, 0, 0, 0.55);
+  box-shadow: inset 0 8px 24px $display-shadow-soft;
 
   &::before,
   &::after {
@@ -93,12 +214,12 @@ body {
 
   &::before {
     top: 0;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.85), transparent);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), transparent);
   }
 
   &::after {
     bottom: 0;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.85), transparent);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.95), transparent);
   }
 }
 
@@ -116,7 +237,7 @@ body {
   }
 
   to {
-    transform: translate3d(0, calc(var(--reel-cell-height) * -8), 0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -127,51 +248,82 @@ body {
 
 .symbol-image {
   @include symbol-image-base;
-  width: clamp(72px, 9vw, 140px);
-  height: clamp(72px, 9vw, 140px);
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.45));
+  width: clamp(88px, 10vh, 180px);
+  height: clamp(88px, 10vh, 180px);
+  filter: drop-shadow(0 6px 12px $display-shadow-medium);
 }
 
 .reel.is-spinning .symbol-image {
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.45)) brightness(1.05);
+  filter: drop-shadow(0 6px 12px $display-shadow-medium) brightness(1.02);
 }
 
 .reel.is-current {
-  border-color: $color-white;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.2);
 }
 
 .reel.is-locked.is-correct {
-  @include status-border($color-success, $color-success-glow);
+  @include correct-glow-pulse;
+
+  // .symbol-image {
+  //   @include correct-symbol-shine;
+  // }
 }
 
 .reel.is-locked.is-wrong {
   @include status-border($color-danger, $color-danger-glow);
 }
 
+@keyframes correct-glow-pulse {
+  0%,
+  100% {
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: none;
+  }
+
+  50% {
+    border-color: var(--symbol-glow-color, #{$color-success});
+    box-shadow:
+      0 0 18px color-mix(in srgb, var(--symbol-glow-color, #{$color-success}) 55%, transparent),
+      0 0 36px color-mix(in srgb, var(--symbol-glow-color, #{$color-success}) 32%, transparent),
+      0 0 56px color-mix(in srgb, var(--symbol-glow-color, #{$color-success}) 14%, transparent);
+  }
+}
+
+@keyframes correct-symbol-shine {
+  0%,
+  100% {
+    filter: drop-shadow(0 6px 12px $display-shadow-medium);
+  }
+
+  50% {
+    filter:
+      drop-shadow(0 0 10px color-mix(in srgb, var(--symbol-glow-color, #{$color-success}) 65%, transparent))
+      brightness(1.08);
+  }
+}
+
 .is-success .slot-frame {
   box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.2),
-    0 0 80px $color-success-glow;
+    inset 0 2px 0 rgba(255, 255, 255, 0.9),
+    0 0 60px $color-success-glow;
 }
 
 .is-failed .slot-frame {
   box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.2),
-    0 0 80px $color-danger-glow;
+    inset 0 2px 0 rgba(255, 255, 255, 0.9),
+    0 0 60px $color-danger-glow;
 }
 
-.message {
-  min-height: 1.4em;
-  margin: 0;
-  font-size: clamp(22px, 3vw, 40px);
-  font-weight: 800;
-  text-align: center;
-  color: var(--muted);
-}
+@include monitor-up {
+  .slot-machine {
+    gap: clamp(24px, 3vh, 48px);
+  }
 
-@include tablet-down {
-  .reels {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .display-title-board {
+    padding:
+      clamp(22px, 2.8vh, 36px)
+      clamp(40px, 5vw, 96px)
+      clamp(20px, 2.4vh, 32px);
   }
 }

@@ -17,7 +17,7 @@
       floating-rise var(--rise-duration) var(--rise-delay) infinite linear,
       floating-spin var(--spin-duration) var(--spin-delay) infinite linear;
     will-change:translate, rotate;
-    filter:grayscale(100%);
+    filter:grayscale(20%) opacity(0.55);
   }
 }
 

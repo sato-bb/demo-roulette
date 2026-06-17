@@ -1,34 +1,54 @@
 // 共通カラー
 $color-white: #ffffff;
 $color-black: #000000;
+$color-text-primary: #1a1d26;
+$color-text-secondary: #64748b;
 
-$color-success: rgba(80, 220, 120, 0.85);
-$color-success-soft: rgba(80, 220, 120, 0.35);
-$color-success-glow: rgba(120, 255, 170, 0.35);
+$color-success: #16a34a;
+$color-success-soft: rgba(22, 163, 74, 0.12);
+$color-success-glow: rgba(22, 163, 74, 0.22);
 
-$color-danger: #ff5a5f;
-$color-danger-soft: rgba(255, 90, 95, 0.45);
-$color-danger-glow: rgba(255, 90, 95, 0.35);
+$color-danger: #dc2626;
+$color-danger-soft: rgba(220, 38, 38, 0.12);
+$color-danger-glow: rgba(220, 38, 38, 0.22);
 
 $font-family-base: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
 $breakpoint-tablet: 720px;
+$breakpoint-monitor: 1280px;
 
 // Display
-$display-bg: #090a0f;
-$display-bg-gradient-center: #24283a;
-$display-panel: rgba(255, 255, 255, 0.08);
-$display-muted: rgba(255, 255, 255, 0.68);
-$display-line: rgba(255, 255, 255, 0.16);
-$display-gold: #d4af37;
+$display-bg: #f5f7fb;
+$display-bg-gradient-center: #e8edf5;
+$display-panel: rgba(0, 0, 0, 0.04);
+$display-muted: $color-text-secondary;
+$display-line: rgba(0, 0, 0, 0.1);
+$display-gold: #c9a227;
 $display-gold-dark: #8a7020;
-$display-slot-frame-top: #3a2f14;
-$display-slot-frame-bottom: #1a1408;
-$display-reels-bg: #0a0b10;
-$display-reel-window-bg: #11131c;
+$display-slot-frame-top: #fff8e8;
+$display-slot-frame-bottom: #f3ead4;
+$display-reels-bg: #eef1f6;
+$display-reel-window-bg: #ffffff;
+$display-shadow-soft: rgba(15, 23, 42, 0.1);
+$display-shadow-medium: rgba(15, 23, 42, 0.14);
+$display-accent-red: #f82525;
+$display-accent-yellow: #f6ff00;
+
+// Symbols
+$symbol-triangle: #0fa790;
+$symbol-circle: #ef5976;
+$symbol-cross: #5282c2;
+$symbol-square: #c37eb5;
+
+$symbol-colors: (
+  triangle: $symbol-triangle,
+  circle: $symbol-circle,
+  cross: $symbol-cross,
+  square: $symbol-square,
+);
 
 // Controller
-$controller-bg: #111318;
-$controller-muted: #9ca3af;
-$controller-line: rgba(255, 255, 255, 0.14);
-$controller-accent: $color-white;
+$controller-bg: #f5f7fb;
+$controller-muted: $color-text-secondary;
+$controller-line: rgba(0, 0, 0, 0.12);
+$controller-accent: $display-gold;

@@ -1,9 +1,14 @@
 const socket = io();
 
+const DISPLAY_TITLE = "SHAPES JACKPOT";
+const DISPLAY_DESCRIPTION = "目押しで△○×□を狙え！";
+
 const display = document.getElementById("display");
+const displayTitle = document.querySelector(".display-title");
+const displayDescription = document.querySelector(".display-description");
 const displayBg = document.querySelector(".display-bg");
+const targetHintsContainer = document.getElementById("targetHints");
 const reelsContainer = document.getElementById("reels");
-const message = document.getElementById("message");
 
 const FLOATING_SHAPES = [
   "/img/circle.svg",
@@ -26,7 +31,7 @@ function createFloatingBackground(container, shapeClassName) {
     const left = Math.random() * 100;
     const duration = 5 + Math.random() * 8;
     const delay = -Math.random() * duration;
-    const opacity = 0.12 + Math.random() * 0.38;
+    const opacity = 0.18 + Math.random() * 0.32;
     const rotate = Math.random() * 360;
     const floatX = (Math.random() - 0.5) * 40;
     const spinDuration = 10 + Math.random() * 14;
@@ -49,6 +54,7 @@ function createFloatingBackground(container, shapeClassName) {
 
 const STRIP_COPIES = 3;
 const REEL_SPEED_MULTIPLIERS = [1, 1.1, 1.2, 1.4];
+const targetHintViews = [];
 const reelViews = [];
 let symbolOrder = [];
 let symbolIndexByKey = new Map();
@@ -66,6 +72,36 @@ function setReelCycleDurations(symbolCount) {
 
 function buildSymbolIndex(order) {
   symbolIndexByKey = new Map(order.map((item, index) => [item.key, index]));
+}
+
+function ensureTargetHints(count) {
+  while (targetHintViews.length < count) {
+    const hintEl = document.createElement("div");
+    hintEl.className = "target-hint";
+
+    const img = document.createElement("img");
+    img.className = "target-hint__image";
+    img.alt = "";
+    img.draggable = false;
+
+    hintEl.appendChild(img);
+    targetHintsContainer.appendChild(hintEl);
+    targetHintViews.push({ hintEl, img });
+  }
+}
+
+function renderTargetHints(state) {
+  const targets = state.targetSequence ?? [];
+  ensureTargetHints(targets.length);
+
+  targets.forEach((item, index) => {
+    const view = targetHintViews[index];
+    view.img.src = item.imageUrl;
+    view.hintEl.dataset.symbol = item.key;
+    view.hintEl.classList.toggle("is-locked", Boolean(state.reels[index]?.locked));
+    view.hintEl.classList.toggle("is-correct", Boolean(state.reels[index]?.stop?.correct));
+    view.hintEl.classList.toggle("is-wrong", Boolean(state.reels[index]?.stop && !state.reels[index].stop.correct));
+  });
 }
 
 function createReelView(index) {
@@ -180,6 +216,10 @@ function renderReels(state) {
 
   reelViews.forEach((view, index) => {
     const reel = state.reels[index];
+    const targetSymbol = state.targetSequence[index]?.key;
+    if (targetSymbol) {
+      view.reelEl.dataset.symbol = targetSymbol;
+    }
     if (!view.strip.childElementCount) {
       buildStrip(view.strip);
     }
@@ -202,8 +242,8 @@ function render(state) {
   }
   lastStatus = state.status;
 
-  message.textContent = state.message;
   setStatusClass(state.status);
+  renderTargetHints(state);
   renderReels(state);
   setReelCycleDurations(symbolCount);
 }
@@ -213,4 +253,12 @@ socket.emit("game:requestState");
 
 if (displayBg) {
   createFloatingBackground(displayBg, "display-bg__shape");
+}
+
+if (displayTitle) {
+  displayTitle.textContent = DISPLAY_TITLE;
+}
+
+if (displayDescription) {
+  displayDescription.textContent = DISPLAY_DESCRIPTION;
 }
