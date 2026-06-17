@@ -10,7 +10,6 @@
   --accent: #{$display-accent-red};
   --danger: #{$color-danger};
   --gold: #{$display-gold};
-  --controller-button-size: clamp(120px, 22vw, 240px);
 }
 
 * {
@@ -25,10 +24,13 @@ body {
 }
 
 .controller {
-  position: relative;
+  margin: auto;
   width: 100vw;
-  height: 100dvh;
-  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
   overflow: hidden;
 }
 
@@ -36,15 +38,15 @@ body {
   position: relative;
   z-index: 1;
   display: grid;
-  place-items: center;
-  width: 100%;
-  height: 100%;
-  padding: clamp(12px, 2.5vh, 24px) clamp(16px, 3vw, 32px);
+  gap: clamp(16px, 2.5vw, 28px);
+  width: min(96vw, 1200px);
+  text-align: center;
+  justify-items: center;
 }
 
 .controller-frame {
-  width: min(100%, 1200px);
-  padding: clamp(16px, 2.5vh, 28px) clamp(20px, 3vw, 40px);
+  width: 100%;
+  padding: clamp(20px, 3vw, 36px) clamp(24px, 4vw, 48px);
   background: rgba($display-accent-yellow, 0.1);
   border: 2px solid $display-accent-red;
   backdrop-filter: blur(10px);
@@ -54,26 +56,25 @@ body {
 }
 
 .controller-actions {
-  padding: clamp(12px, 2vh, 20px);
+  padding: clamp(12px, 2vw, 20px);
   border-radius: 20px;
   background: $display-reels-bg;
   border: 2px solid rgba(0, 0, 0, 0.06);
 }
 
 .stop-buttons {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(12px, 2vw, 24px);
-  justify-items: center;
+  display: flex;
+  gap: 2vw;
+  width: 100%;
+  justify-content: center;
 }
 
 .button {
   @include grid-center;
-  width: min(100%, var(--controller-button-size));
-  height: min(100%, var(--controller-button-size));
-  aspect-ratio: 1;
+  width: 19vw;
+  height: 21vw;
   border: 2px solid rgba(0, 0, 0, 0.08);
-  border-radius: clamp(16px, 2.4vw, 24px);
+  border-radius: 4vw;
   cursor: pointer;
   background: rgba(255, 255, 255, 0.92);
   touch-action: manipulation;
@@ -114,12 +115,10 @@ body {
 
 .stop-step {
   @include grid-center;
-  width: 62%;
-  height: 62%;
+  width: 60%;
 
   img {
-    width: 100%;
-    height: 100%;
+    width: 60%;
     object-fit: contain;
   }
 }
@@ -129,13 +128,10 @@ body {
 }
 
 .button-reset {
-  position: absolute;
-  top: clamp(12px, 2.5vh, 24px);
-  left: clamp(16px, 3vw, 32px);
-  z-index: 2;
-  min-height: 48px;
-  padding: clamp(12px, 1.8vh, 16px) clamp(20px, 4vw, 36px);
-  font-size: clamp(15px, 2vh, 20px);
+  justify-self: center;
+  width: fit-content;
+  padding: clamp(10px, 1.4vw, 14px) clamp(18px, 3vw, 32px);
+  font-size: clamp(14px, 1.8vw, 18px);
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--muted);
@@ -158,20 +154,6 @@ body {
   &:disabled {
     cursor: not-allowed;
     opacity: 0.55;
-  }
-}
-
-@include landscape-tablet {
-  :root {
-    --controller-button-size: clamp(140px, 24vh, 280px);
-  }
-
-  .controller-frame {
-    width: min(100%, 1100px);
-  }
-
-  .stop-buttons {
-    gap: clamp(16px, 2.5vw, 28px);
   }
 }
 

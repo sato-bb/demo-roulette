@@ -10,7 +10,7 @@
   --line: #{$display-line};
   --gold: #{$display-gold};
   --gold-dark: #{$display-gold-dark};
-  --reel-cell-height: clamp(140px, 16vh, 240px);
+  --reel-cell-height: clamp(120px, 16vw, 200px);
 }
 
 * {
@@ -28,8 +28,7 @@ body {
   @include grid-center;
   position: relative;
   min-height: 100vh;
-  min-height: 100dvh;
-  padding: clamp(20px, 3vh, 48px) clamp(24px, 4vw, 64px);
+  padding: clamp(16px, 3vw, 40px);
   overflow: hidden;
 }
 
@@ -37,8 +36,8 @@ body {
   position: relative;
   z-index: 1;
   display: grid;
-  gap: clamp(20px, 2.5vh, 40px);
-  width: min(90vw, 1680px);
+  gap: clamp(16px, 2.5vw, 28px);
+  width: min(96vw, 1200px);
   text-align: center;
 }
 
@@ -96,7 +95,7 @@ body {
   position: relative;
   z-index: 1;
   margin: 0;
-  font-size: clamp(32px, 4.5vh, 72px);
+  font-size: clamp(28px, 4.8vw, 52px);
   font-weight: 900;
   line-height: 1.15;
   letter-spacing: 0.12em;
@@ -108,9 +107,9 @@ body {
   margin: 0;
   justify-self: center;
   width: fit-content;
-  max-width: min(100%, 800px);
-  padding: clamp(12px, 1.6vh, 18px) clamp(24px, 3vw, 40px);
-  font-size: clamp(18px, 2.2vh, 32px);
+  max-width: min(100%, 640px);
+  padding: clamp(10px, 1.4vw, 14px) clamp(18px, 3vw, 32px);
+  font-size: clamp(15px, 2vw, 22px);
   font-weight: 700;
   line-height: 1.5;
   letter-spacing: 0.04em;
@@ -122,7 +121,7 @@ body {
 }
 
 .slot-frame {
-  padding: clamp(24px, 3vh, 48px) clamp(48px, 6vw, 96px);
+  padding: clamp(20px, 3vw, 36px) clamp(40px, 6vw, 72px);
   background: rgba($display-accent-yellow, 0.1);
   border: 2px solid $display-accent-red;
   backdrop-filter: blur(10px);
@@ -152,8 +151,8 @@ body {
 
 .target-hint__image {
   @include symbol-image-base;
-  width: clamp(24px, 3vh, 48px);
-  height: clamp(24px, 3vh, 48px);
+  width: clamp(20px, 2.75vw, 36px);
+  height: clamp(20px, 2.75vw, 36px);
 }
 
 .target-hint.is-locked:not(.is-correct):not(.is-wrong) {
@@ -248,8 +247,8 @@ body {
 
 .symbol-image {
   @include symbol-image-base;
-  width: clamp(88px, 10vh, 180px);
-  height: clamp(88px, 10vh, 180px);
+  width: clamp(72px, 9vw, 140px);
+  height: clamp(72px, 9vw, 140px);
   filter: drop-shadow(0 6px 12px $display-shadow-medium);
 }
 
@@ -315,15 +314,9 @@ body {
     0 0 60px $color-danger-glow;
 }
 
-@include monitor-up {
-  .slot-machine {
-    gap: clamp(24px, 3vh, 48px);
-  }
-
-  .display-title-board {
-    padding:
-      clamp(22px, 2.8vh, 36px)
-      clamp(40px, 5vw, 96px)
-      clamp(20px, 2.4vh, 32px);
+@include tablet-down {
+  .target-hints,
+  .reels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
