@@ -1,6 +1,7 @@
 @use "variables" as *;
 @use "mixins" as *;
 @use "floating-bg";
+@use "marquee-frame" as *;
 
 :root {
   --bg: #{$display-bg};
@@ -11,6 +12,7 @@
   --gold: #{$display-gold};
   --gold-dark: #{$display-gold-dark};
   --reel-cell-height: clamp(120px, 16vw, 200px);
+  --display-title-image: url("/img/title.svg");
 }
 
 * {
@@ -42,65 +44,39 @@ body {
 }
 
 .display-title-board {
-  position: relative;
+  @include marquee-frame;
   justify-self: center;
   width: fit-content;
   max-width: 100%;
   padding:
-    clamp(18px, 2.6vw, 26px)
-    clamp(28px, 5vw, 64px)
-    clamp(16px, 2.4vw, 22px);
-  border-radius: clamp(28px, 5vw, 64px);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.86) 100%),
-    rgba($display-accent-yellow, 0.1);
-  // border: 2px solid $display-accent-red;
-  box-shadow: 0 12px 32px $display-shadow-soft;
-  overflow: hidden;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    background: linear-gradient(
-      90deg,
-      $symbol-triangle 0% 25%,
-      $symbol-circle 25% 50%,
-      $symbol-cross 50% 75%,
-      $symbol-square 75% 100%
-    );
-    pointer-events: none;
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(
-      135deg,
-      rgba($symbol-triangle, 0.06) 0%,
-      transparent 28%,
-      transparent 72%,
-      rgba($symbol-square, 0.06) 100%
-    );
-    pointer-events: none;
-  }
+    clamp(22px, 3.2vw, 34px)
+    clamp(40px, 7vw, 84px)
+    clamp(20px, 3vw, 30px);
 }
 
 .display-title {
   position: relative;
   z-index: 1;
+  width: clamp(240px, 48vw, 520px);
+  aspect-ratio: 673 / 238;
   margin: 0;
-  font-size: clamp(28px, 4.8vw, 52px);
-  font-weight: 900;
-  line-height: 1.15;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: $display-accent-red;
+  background: linear-gradient(
+    115deg,
+    $display-accent-yellow 0%,
+    $display-accent-red 42%,
+    #d41414 72%,
+    $display-gold 100%
+  );
+  -webkit-mask-image: var(--display-title-image);
+  mask-image: var(--display-title-image);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  filter: drop-shadow(0 2px 0 rgba(255, 255, 255, 0.85))
+    drop-shadow(0 4px 10px rgba($display-accent-red, 0.2));
 }
 
 .display-description {
@@ -121,16 +97,13 @@ body {
 }
 
 .slot-frame {
+  @include marquee-frame;
   padding: clamp(20px, 3vw, 36px) clamp(40px, 6vw, 72px);
-  background: rgba($display-accent-yellow, 0.1);
-  border: 2px solid $display-accent-red;
-  backdrop-filter: blur(10px);
-  box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.9),
-    0 24px 60px $display-shadow-soft;
 }
 
 .reels-area {
+  position: relative;
+  z-index: 1;
   display: grid;
   gap: clamp(10px, 1.5vw, 16px);
   padding: clamp(12px, 2vw, 20px);
@@ -303,15 +276,11 @@ body {
 }
 
 .is-success .slot-frame {
-  box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.9),
-    0 0 60px $color-success-glow;
+  --frame-outer-glow: 0 0 60px #{$color-success-glow};
 }
 
 .is-failed .slot-frame {
-  box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.9),
-    0 0 60px $color-danger-glow;
+  --frame-outer-glow: 0 0 60px #{$color-danger-glow};
 }
 
 @include tablet-down {

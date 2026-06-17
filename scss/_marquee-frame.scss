@@ -1,0 +1,77 @@
+@use "variables" as *;
+
+@keyframes marquee-twinkle {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@mixin marquee-frame {
+  --marquee-bulb-size: clamp(8px, 1.1vw, 11px);
+  --marquee-bulb-gap: clamp(10px, 1.6vw, 16px);
+  --frame-outer-glow: 0 12px 32px #{$display-shadow-soft};
+  position: relative;
+  border-radius: clamp(14px, 2.4vw, 22px);
+  background:
+    radial-gradient(circle at 50% 0%, rgba($display-accent-yellow, 0.16) 0%, transparent 55%),
+    linear-gradient(180deg, rgba($display-title-board-top, 0.98) 0%, rgba($display-title-board-bottom, 0.94) 100%);
+  border: 2px solid $display-accent-red;
+  box-shadow:
+    0 0 0 3px rgba($display-accent-red, 0.1),
+    var(--frame-outer-glow),
+    inset 0 2px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -6px 18px rgba($display-accent-yellow, 0.08);
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(
+      90deg,
+      $symbol-triangle 0% 25%,
+      $symbol-circle 25% 50%,
+      $symbol-cross 50% 75%,
+      $symbol-square 75% 100%
+    );
+    pointer-events: none;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: clamp(5px, 0.9vw, 8px);
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+      radial-gradient(circle, $display-marquee-bulb 0 38%, $display-marquee-bulb-dim 40% 48%, transparent 50%) 0 0 / var(--marquee-bulb-size) var(--marquee-bulb-size),
+      radial-gradient(circle, $display-marquee-bulb 0 38%, $display-marquee-bulb-dim 40% 48%, transparent 50%) 0 100% / var(--marquee-bulb-size) var(--marquee-bulb-size),
+      radial-gradient(circle, $display-marquee-bulb 0 38%, $display-marquee-bulb-dim 40% 48%, transparent 50%) 0 0 / var(--marquee-bulb-size) var(--marquee-bulb-size),
+      radial-gradient(circle, $display-marquee-bulb 0 38%, $display-marquee-bulb-dim 40% 48%, transparent 50%) 100% 0 / var(--marquee-bulb-size) var(--marquee-bulb-size);
+    background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+    background-position:
+      top center,
+      bottom center,
+      left center,
+      right center;
+    background-size:
+      var(--marquee-bulb-gap) var(--marquee-bulb-size),
+      var(--marquee-bulb-gap) var(--marquee-bulb-size),
+      var(--marquee-bulb-size) var(--marquee-bulb-gap),
+      var(--marquee-bulb-size) var(--marquee-bulb-gap);
+    animation: marquee-twinkle 1.4s ease-in-out infinite;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    padding: clamp(4px, 0.7vw, 6px);
+  }
+}

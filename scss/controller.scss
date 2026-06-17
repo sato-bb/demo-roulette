@@ -1,6 +1,7 @@
 @use "variables" as *;
 @use "mixins" as *;
 @use "floating-bg";
+@use "marquee-frame" as *;
 
 :root {
   --bg: #{$controller-bg};
@@ -45,17 +46,14 @@ body {
 }
 
 .controller-frame {
+  @include marquee-frame;
   width: 100%;
   padding: clamp(20px, 3vw, 36px) clamp(24px, 4vw, 48px);
-  background: rgba($display-accent-yellow, 0.1);
-  border: 2px solid $display-accent-red;
-  backdrop-filter: blur(10px);
-  box-shadow:
-    inset 0 2px 0 rgba(255, 255, 255, 0.9),
-    0 24px 60px $display-shadow-soft;
 }
 
 .controller-actions {
+  position: relative;
+  z-index: 1;
   padding: clamp(12px, 2vw, 20px);
   border-radius: 20px;
   background: $display-reels-bg;
